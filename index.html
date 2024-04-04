@@ -1,50 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <title>Ramallah Libraries</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
-  <style>
-    body, html {
-      margin: 0;
-      height: 100%;
-      width: 100%;
-    }
-    /* Style the map */
-    #map {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+    <title>Ramallah Libraries Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { height: 500px; }
+    </style>
 </head>
 <body>
-  <div id="map"></div>
- <!-- Add a link to the jQuery JavaScript library so you can leverage ajax methods to load your data -->
-  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script>
-    const mapOptions = {
-      zoomSnap: 2.5,
-      center: [31.9048074 , 35.2013228], // Coordinates for "Scientific and Lab Supplies Library"
-      zoom: 16.5,
-    };
 
-    const map = L.map("map", mapOptions);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 20
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+
+    // Create map centered at "مكتبة التجهيزات العلمية والمخبرية"
+    var map = L.map('map').setView([31.9072, 35.2045], 13);
+
+    // Add tile layer (OpenStreetMap as an example)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
-// use jquery to load GeoJSON data
 
-    $.getJSON("RamallahZones.json", function(RZ) {
-      L.geoJson(RZ).addTo(map);
-    });
+    // Define coordinates of Ramallah Libraries
+    var libraries = [
+        { name: "مكتبة التجهيزات العلمية والمخبرية", location: [31.9056, 35.2038] }, // "Scientific Equipment and Laboratory Library"
+        // Add coordinates for other libraries here
+    ];
 
-    $.getJSON("Libraries.json", function(WC) {
-      L.geoJson(WC).addTo(map);
-    });
-  </script>
+    // Add markers for libraries
+    for (var i = 0; i < libraries.length; i++) {
+        var library = libraries[i];
+        L.marker(library.location).addTo(map).bindPopup(library.name);
+    }
+
+    // Define coordinates for the areas where libraries are distributed
+    // Example: Polygon coordinates for Ramallah area
+    var ramallahArea = [
+        [31.918, 35.192],
+        [31.925, 35.208],
+        [31.903, 35.226],
+        [31.887, 35.219],
+        [31.901, 35.192]
+    ];
+
+    // Add polygon for Ramallah area
+    L.polygon(ramallahArea, { color: 'blue', fillOpacity: 0.2 }).addTo(map);
+
+</script>
+
 </body>
 </html>
